@@ -14,7 +14,7 @@ public class GameLogic : MonoBehaviour {
     private GameObject tileFieldPrefab;
     private GameObject gameFieldParent;
 
-    private TileArrayIndex[,] tileGameObjects;
+    private GameObject[,] tileGameObjects;
     private GameObject tileParentObject;
 
     [SerializeField]
@@ -25,7 +25,7 @@ public class GameLogic : MonoBehaviour {
     private List<GameObject> tileVariations;
 
     void Start() {
-        tileGameObjects = new TileArrayIndex[fieldWidth, fieldHeight];
+        tileGameObjects = new GameObject[fieldWidth, fieldHeight];
         tileParentObject = new GameObject("Tiles");
         gameFieldParent = new GameObject("Game Field"); //could use better name, just storing empty GameObjects representing each field of the entire game field
 
@@ -117,14 +117,9 @@ public class GameLogic : MonoBehaviour {
     }
 
     //ToDo - Generate a field where there are no Matches (3 or more tiles of same type in a horizontal line)
-    private TileArrayIndex GenerateTileArrayPositionAt(int x, int y) {
+    private GameObject GenerateTileArrayPositionAt(int x, int y) {
         int tileIndex = Random.Range(0, tileVariations.Count);//0 magic nr?
-        GameObject tileObject = Instantiate(tileVariations[tileIndex], tileParentObject.transform);
-
-        TileArrayIndex tile = tileObject.AddComponent<TileArrayIndex>();
-        tile.SetValue(x, y);
-
-        return tile;
+        return Instantiate(tileVariations[tileIndex], tileParentObject.transform);
     }
 
     public void RemoveTiles(int x, int y) {//could use better name.. wont always be multiples, wont always be a single 1.. 
@@ -141,7 +136,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
-        TileArrayIndex tileAbove = tileGameObjects[x, y + 1];
+        GameObject tileAbove = tileGameObjects[x, y + 1];
         if (tileAbove == null) {
             return;
         }
@@ -152,9 +147,8 @@ public class GameLogic : MonoBehaviour {
     }
 
     private void MoveTileDownOneField(int x, int y) {
-        TileArrayIndex tile = tileGameObjects[x, y];
+        GameObject tile = tileGameObjects[x, y];
         tile.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y - 1, tile.transform.position.z);
-        tile.SetValue(x, y - 1);
 
         tileGameObjects[x, y - 1] = tile;
         tileGameObjects[x, y] = null;
