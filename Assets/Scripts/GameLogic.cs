@@ -31,14 +31,49 @@ public class GameLogic : MonoBehaviour {
 
         SetGameBackgroundSize(fieldWidth, fieldHeight);
         SetupGameField();
-        FillFieldWithRandomTiles();
+        FillFieldWithTiles();
+        //FillFieldWithRandomTiles();
     }
 
     private void SetGameBackgroundSize(int width, int height) {
         gameBackground.transform.localScale = new Vector3(width, height, gameBackground.transform.localScale.z);
     }
 
-    private void FillFieldWithRandomTiles() {
+
+    private void FillFieldWithTiles() { //Logic - can't have more than 2 tiles of the same type in a horizontal line, so there are no accidental mathes
+        FillFieldWithRandomTiles();
+        //UpdateTilesToPreventMatches();
+    }
+    /*
+    private void UpdateTilesToPreventMatches() {
+        //iterate over all horizontal rows
+        //check that current Tile doesn't have more than 1 match next to it
+        int matches = 0;
+        for (int y = 0; y < fieldHeight; y++) {
+            matches = 0;
+            for (int x = 0; x < fieldWidth - 1; x++) {
+                if (tileGameObjects[x, y].name.Equals(tileGameObjects[x + 1, y])) {
+                    matches += 1;
+                    if (matches == 3) {
+                        tileGameObjects[x + 1, y] = GetRandomTileExcept(tileGameObjects[x, y].name);
+
+                    }
+                }
+            }
+        }
+    }
+    */
+    private GameObject GetRandomTileExcept(string excludedTileName) {//not sure if it should use tile names or some other kind of reference...
+                                                             //List<GameObject> availableTiles = tileVariations.
+                                                             //NOTE - tileName might differ from the Prefab name, due to being a (Clone)... ignore that part ? 
+        int tileIndex = Random.Range(0, tileVariations.Count);//0 magic nr?
+        if (tileVariations[tileIndex].name.Equals(excludedTileName)) {
+            tileIndex = tileIndex == (tileVariations.Count - 1) ? 0 : tileIndex + 1; //not very readable
+        }
+        return Instantiate(tileVariations[tileIndex], tileParentObject.transform);
+    }
+
+    private void FillFieldWithRandomTiles() { //might end up with existing Matches already on field
         for (int x = 0; x < fieldWidth; x++) {
             for (int y = 0; y < fieldHeight; y++) {
                 tileGameObjects[x, y] = GenerateTileArrayPositionAt(x, y);
