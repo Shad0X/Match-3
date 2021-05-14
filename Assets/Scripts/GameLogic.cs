@@ -42,9 +42,9 @@ public class GameLogic : MonoBehaviour {
 
     private void FillFieldWithTiles() { //Logic - can't have more than 2 tiles of the same type in a horizontal line, so there are no accidental mathes
         FillFieldWithRandomTiles();
-        //UpdateTilesToPreventMatches();
+        UpdateTilesToPreventMatches();
     }
-    /*
+    
     private void UpdateTilesToPreventMatches() {
         //iterate over all horizontal rows
         //check that current Tile doesn't have more than 1 match next to it
@@ -52,30 +52,36 @@ public class GameLogic : MonoBehaviour {
         for (int y = 0; y < fieldHeight; y++) {
             matches = 0;
             for (int x = 0; x < fieldWidth - 1; x++) {
-                if (tileGameObjects[x, y].name.Equals(tileGameObjects[x + 1, y])) {
+                if (tileGameObjects[x, y].name.Equals(tileGameObjects[x + 1, y].name)) {
                     matches += 1;
-                    if (matches == 3) {
+                    if (matches == 2) {
+                        tileGameObjects[x + 1, y].SetActive(false);//disabling old Tile
+                        tileGameObjects[x + 1, y] = null;//clearing out reference to it (not sure if needed... might be overwritten by line below anyway?)
                         tileGameObjects[x + 1, y] = GetRandomTileExcept(tileGameObjects[x, y].name);
+                        tileGameObjects[x + 1, y].transform.position = GetTileGameworldLocation(x + 1, y);
 
+                        matches = 0;
                     }
+                } else {
+                    matches = 0;
                 }
             }
         }
     }
-    */
+    
     private GameObject GetRandomTileExcept(string excludedTileName) {//not sure if it should use tile names or some other kind of reference...
                                                              //List<GameObject> availableTiles = tileVariations.
                                                              //NOTE - tileName might differ from the Prefab name, due to being a (Clone)... ignore that part ? 
         int tileIndex = Random.Range(0, tileVariations.Count);//0 magic nr?
-        if (tileVariations[tileIndex].name.Equals(excludedTileName)) {
+        if (excludedTileName.Contains(tileVariations[tileIndex].name)) {//since the GameObject names contain (Clone) in the title...
             tileIndex = tileIndex == (tileVariations.Count - 1) ? 0 : tileIndex + 1; //not very readable
         }
         return Instantiate(tileVariations[tileIndex], tileParentObject.transform);
     }
 
     private void FillFieldWithRandomTiles() { //might end up with existing Matches already on field
-        for (int x = 0; x < fieldWidth; x++) {
-            for (int y = 0; y < fieldHeight; y++) {
+        for (int y = 0; y < fieldHeight; y++) {
+            for (int x = 0; x < fieldWidth; x++) {
                 tileGameObjects[x, y] = GenerateTileArrayPositionAt(x, y);
                 tileGameObjects[x, y].transform.position = GetTileGameworldLocation(x, y);
             }
