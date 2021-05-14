@@ -65,16 +65,12 @@ public class GameLogic : MonoBehaviour {
         return new Vector3(xLocation, yLocation, gameBackground.transform.position.z);
     }
 
-    private void SetupGameField()
-    {
-        //instantiate Empty GameObject Field WIDTH x HEIGHT times 
+    private void SetupGameField() {
         for (int x = 0; x < fieldWidth; x++) {
             for (int y = 0; y < fieldHeight; y++) {
                 CreateTileFieldObjectAt(x, y);
             }
         }
-        // assign TileArrayIndex to each 1 (will never change -- meaning can be public static Vector2Int ?)
-
     }
 
     private void CreateTileFieldObjectAt(int x, int y) {
@@ -96,9 +92,8 @@ public class GameLogic : MonoBehaviour {
         return tile;
     }
 
-    public void RemoveTiles(GameObject tile) {//could use better name.. wont always be multiples, wont always be a single 1.. 
-        TileArrayIndex tileArrayIndex = tile.GetComponent<TileArrayIndex>();//problematic, since it accepts a GameObject, but has no mentions of making use of TileArrayIndex scripts.. 
-        RemoveMatchingTilesAroundPosition(tileArrayIndex.x, tileArrayIndex.y);
+    public void RemoveTiles(int x, int y) {//could use better name.. wont always be multiples, wont always be a single 1.. 
+        RemoveMatchingTilesAroundPosition(x, y);
     }
 
     private void RemoveTileAt(int x, int y) {

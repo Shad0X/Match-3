@@ -22,14 +22,16 @@ public class PlayerInput : MonoBehaviour {
         if (Physics.Raycast(ray, out raycastHit)) {
             GameObject tile = raycastHit.transform.gameObject;
             if (tile != null) {
-                RemoveTile(tile);
+                TileArrayIndex fieldIndex = tile.GetComponent<TileArrayIndex>();
+                RemoveTile(fieldIndex.x, fieldIndex.y);
             }
         }
     }
 
     private GameLogic gameLogic;
 
-    private void RemoveTile(GameObject tile) {
-        gameLogic.RemoveTiles(tile);
+    private void RemoveTile(int x, int y) {
+        gameLogic.RemoveTiles(x, y);
     }
+    
 }
