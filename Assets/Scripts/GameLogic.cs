@@ -207,7 +207,7 @@ public class GameLogic : MonoBehaviour {
     }
 
     private void RemoveLeftTilesIfPossible(int x, int y, string expectedName) {
-        ArrayIndex leftTileIndex = new ArrayIndex(x - 1, y);
+        Vector2Int leftTileIndex = new Vector2Int(x - 1, y);
 
         if (DoesTileGameObjectNameMatch(leftTileIndex.x, leftTileIndex.y, expectedName)) {
             RemoveTileAt(leftTileIndex.x, leftTileIndex.y);
@@ -216,7 +216,7 @@ public class GameLogic : MonoBehaviour {
     }
 
     private void RemoveRightTilesIfPossible(int x, int y, string expectedName) {
-        ArrayIndex rightTileIndex = new ArrayIndex(x + 1, y);
+        Vector2Int rightTileIndex = new Vector2Int(x + 1, y);
 
         if (DoesTileGameObjectNameMatch(rightTileIndex.x, rightTileIndex.y, expectedName)) {
             RemoveTileAt(rightTileIndex.x, rightTileIndex.y);

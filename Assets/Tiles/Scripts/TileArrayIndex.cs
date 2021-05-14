@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class TileArrayIndex : MonoBehaviour {
 
-    private ArrayIndex index;
+    private Vector2Int index;
    
     private void Awake() {
-        index = new ArrayIndex();
+        index = new Vector2Int(-1, -1);
     }
 
     public int x {
@@ -17,7 +17,7 @@ public class TileArrayIndex : MonoBehaviour {
     }
 
     public void SetValue(int x, int y) {
-        index.SetValue(x, y);
+        index = new Vector2Int(x, y);
     }
    
 }
