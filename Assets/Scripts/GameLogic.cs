@@ -45,7 +45,7 @@ public class GameLogic : MonoBehaviour {
         UpdateTilesToPreventMatches();
     }
     
-    private void UpdateTilesToPreventMatches() {
+    private void UpdateTilesToPreventMatches() {//ToDo - terrible code, split it up n refactor properly...
         //iterate over all horizontal rows
         //check that current Tile doesn't have more than 1 match next to it
         int matches = 0;
