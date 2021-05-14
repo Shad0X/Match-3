@@ -129,7 +129,9 @@ public class GameLogic : MonoBehaviour {
     }
 
     public void RemoveTiles(int x, int y) {//could use better name.. wont always be multiples, wont always be a single 1.. 
-        RemoveMatchingTilesAroundPosition(x, y);
+        if (tileGameObjects[x, y] != null) {
+            RemoveMatchingTilesAroundPosition(x, y);
+        }
     }
 
     private void RemoveTileAt(int x, int y) {
