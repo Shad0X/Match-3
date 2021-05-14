@@ -169,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fieldWidth: 10
   fieldHeight: 10
+  tileFieldPrefab: {fileID: 3603937792976823472, guid: 717962f7463f7ca4a980021ffe4c8978, type: 3}
   gameBackground: {fileID: 1479276307}
   tileVariations:
   - {fileID: 5444109902792811763, guid: 69afb1a99627fbf4286b3730a632f619, type: 3}

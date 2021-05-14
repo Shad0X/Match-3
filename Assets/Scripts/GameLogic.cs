@@ -10,6 +10,9 @@ public class GameLogic : MonoBehaviour {
     [SerializeField]
     private int fieldHeight;
 
+    [SerializeField]
+    private GameObject tileFieldPrefab;
+
     private TileArrayIndex[,] tileGameObjects;
     private GameObject tileParentObject;
 
@@ -60,6 +63,14 @@ public class GameLogic : MonoBehaviour {
         return new Vector3(xLocation, yLocation, gameBackground.transform.position.z);
     }
 
+    private void SetupGameField()
+    {
+        //instantiate Empty GameObject Field WIDTH x HEIGHT times 
+        // assign TileArrayIndex to each 1 (will never change -- meaning can be public static Vector2Int ?)
+
+    }
+
+    //ToDo - Generate a field where there are no Matches (3 or more tiles of same type in a horizontal line)
     private TileArrayIndex GenerateTileArrayPositionAt(int x, int y) {
         int tileIndex = Random.Range(0, tileVariations.Count);//0 magic nr?
         GameObject tileObject = Instantiate(tileVariations[tileIndex], tileParentObject.transform);
