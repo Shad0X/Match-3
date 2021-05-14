@@ -123,6 +123,53 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &16212512
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 16212514}
+  - component: {fileID: 16212513}
+  m_Layer: 0
+  m_Name: Tile Fields
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &16212513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 16212512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dea851e95fd8a54d8a2e92172502808, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fieldWidth: 10
+  fieldHeight: 10
+  tileFieldPrefab: {fileID: 3603937792976823472, guid: 717962f7463f7ca4a980021ffe4c8978, type: 3}
+  gameBackground: {fileID: 1479276307}
+--- !u!4 &16212514
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 16212512}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &43900437
 GameObject:
   m_ObjectHideFlags: 0
@@ -167,9 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c654c8e1e90daed44b86b1597ecbf4f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fieldWidth: 10
-  fieldHeight: 10
-  tileFieldPrefab: {fileID: 3603937792976823472, guid: 717962f7463f7ca4a980021ffe4c8978, type: 3}
+  gameField: {fileID: 16212513}
   gameBackground: {fileID: 1479276307}
   tileVariations:
   - {fileID: 5444109902792811763, guid: 69afb1a99627fbf4286b3730a632f619, type: 3}

@@ -5,14 +5,7 @@ public class GameLogic : MonoBehaviour {
 
     //has a lot more than just Logic.. also takes care of entire game grid and all the functionality that affects it.. etc, etc.. 
     [SerializeField]
-    private int fieldWidth;
-    
-    [SerializeField]
-    private int fieldHeight;
-
-    [SerializeField]
-    private GameObject tileFieldPrefab;
-    private GameObject gameFieldParent;
+    private GameField gameField;
 
     private GameObject[,] tileGameObjects;
     private GameObject tileParentObject;
@@ -25,14 +18,12 @@ public class GameLogic : MonoBehaviour {
     private List<GameObject> tileVariations;
 
     void Start() {
-        tileGameObjects = new GameObject[fieldWidth, fieldHeight];
+        tileGameObjects = new GameObject[gameField.Width, gameField.Height];
         tileParentObject = new GameObject("Tiles");
-        gameFieldParent = new GameObject("Game Field"); //could use better name, just storing empty GameObjects representing each field of the entire game field
 
-        SetGameBackgroundSize(fieldWidth, fieldHeight);
-        SetupGameField();
+        SetGameBackgroundSize(gameField.Width, gameField.Height);
+
         FillFieldWithTiles();
-        //FillFieldWithRandomTiles();
     }
 
     private void SetGameBackgroundSize(int width, int height) {
@@ -49,9 +40,9 @@ public class GameLogic : MonoBehaviour {
         //iterate over all horizontal rows
         //check that current Tile doesn't have more than 1 match next to it
         int matches = 0;
-        for (int y = 0; y < fieldHeight; y++) {
+        for (int y = 0; y < gameField.Height; y++) {
             matches = 0;
-            for (int x = 0; x < fieldWidth - 1; x++) {
+            for (int x = 0; x < gameField.Width - 1; x++) {
                 if (tileGameObjects[x, y].name.Equals(tileGameObjects[x + 1, y].name)) {
                     matches += 1;
                     if (matches == 2) {
@@ -80,46 +71,31 @@ public class GameLogic : MonoBehaviour {
     }
 
     private void FillFieldWithRandomTiles() { //might end up with existing Matches already on field
-        for (int y = 0; y < fieldHeight; y++) {
-            for (int x = 0; x < fieldWidth; x++) {
+        for (int y = 0; y < gameField.Height; y++) {
+            for (int x = 0; x < gameField.Width; x++) {
                 tileGameObjects[x, y] = GenerateTileArrayPositionAt(x, y);
                 tileGameObjects[x, y].transform.position = GetTileGameworldLocation(x, y);
             }
         }
     }
 
-    private Vector3 GetTileGameworldLocation(int x, int y) {
+    private Vector3 GetTileGameworldLocation(int x, int y) {//ToDo - move to Helper class. Used by Both Fields and Tiles
+        //pass in Field width and height to make it Static ?
         float xOffset = 0;
         float yOffset = 0;
         
         //using offSet in case if game field size consists of unevent numbers
-        if (fieldWidth % 2 == 0) {
+        if (gameField.Width % 2 == 0) {
             xOffset = 0.5f; 
         }
-        if (fieldHeight % 2 == 0) {
+        if (gameField.Height % 2 == 0) {
             yOffset = 0.5f;
         }
 
-        float xLocation = x - fieldWidth / 2 + xOffset;
-        float yLocation = y - fieldHeight / 2 + yOffset;
+        float xLocation = x - gameField.Width / 2 + xOffset;
+        float yLocation = y - gameField.Height / 2 + yOffset;
 
-        return new Vector3(xLocation, yLocation, gameBackground.transform.position.z);
-    }
-
-    private void SetupGameField() {
-        for (int x = 0; x < fieldWidth; x++) {
-            for (int y = 0; y < fieldHeight; y++) {
-                CreateTileFieldObjectAt(x, y);
-            }
-        }
-    }
-
-    private void CreateTileFieldObjectAt(int x, int y) {
-        GameObject field = Instantiate(tileFieldPrefab, gameFieldParent.transform);
-        field.transform.position = GetTileGameworldLocation(x, y);
-
-        TileArrayIndex tile = field.AddComponent<TileArrayIndex>();//ToDo - refactor to use Vector2Int instead
-        tile.SetValue(x, y);
+        return new Vector3(xLocation, yLocation, gameBackground.transform.position.z); //move to parameters to make static
     }
 
     //ToDo - Generate a field where there are no Matches (3 or more tiles of same type in a horizontal line)
@@ -140,7 +116,7 @@ public class GameLogic : MonoBehaviour {
     }
 
     private void MoveAllTilesAboveThisPositionDown(int x, int y) {
-        if (y + 1 >= fieldHeight) {
+        if (y + 1 >= gameField.Height) {
             return;
         }
 
@@ -233,7 +209,7 @@ public class GameLogic : MonoBehaviour {
     }
     
     private bool IsXLocationInsideField(int x) {
-        return x >= 0 && x < fieldWidth;
+        return x >= 0 && x < gameField.Width;
     }
 
 }
