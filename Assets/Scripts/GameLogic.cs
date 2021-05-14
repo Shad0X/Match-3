@@ -12,6 +12,7 @@ public class GameLogic : MonoBehaviour {
 
     [SerializeField]
     private GameObject tileFieldPrefab;
+    private GameObject gameFieldParent;
 
     private TileArrayIndex[,] tileGameObjects;
     private GameObject tileParentObject;
@@ -26,8 +27,10 @@ public class GameLogic : MonoBehaviour {
     void Start() {
         tileGameObjects = new TileArrayIndex[fieldWidth, fieldHeight];
         tileParentObject = new GameObject("Tiles");
+        gameFieldParent = new GameObject("Game Field"); //could use better name, just storing empty GameObjects representing each field of the entire game field
 
         SetGameBackgroundSize(fieldWidth, fieldHeight);
+        SetupGameField();
         FillFieldWithRandomTiles();
     }
 
@@ -38,7 +41,6 @@ public class GameLogic : MonoBehaviour {
     private void FillFieldWithRandomTiles() {
         for (int x = 0; x < fieldWidth; x++) {
             for (int y = 0; y < fieldHeight; y++) {
-
                 tileGameObjects[x, y] = GenerateTileArrayPositionAt(x, y);
                 tileGameObjects[x, y].transform.position = GetTileGameworldLocation(x, y);
             }
@@ -66,8 +68,21 @@ public class GameLogic : MonoBehaviour {
     private void SetupGameField()
     {
         //instantiate Empty GameObject Field WIDTH x HEIGHT times 
+        for (int x = 0; x < fieldWidth; x++) {
+            for (int y = 0; y < fieldHeight; y++) {
+                CreateTileFieldObjectAt(x, y);
+            }
+        }
         // assign TileArrayIndex to each 1 (will never change -- meaning can be public static Vector2Int ?)
 
+    }
+
+    private void CreateTileFieldObjectAt(int x, int y) {
+        GameObject field = Instantiate(tileFieldPrefab, gameFieldParent.transform);
+        field.transform.position = GetTileGameworldLocation(x, y);
+
+        TileArrayIndex tile = field.AddComponent<TileArrayIndex>();//ToDo - refactor to use Vector2Int instead
+        tile.SetValue(x, y);
     }
 
     //ToDo - Generate a field where there are no Matches (3 or more tiles of same type in a horizontal line)
