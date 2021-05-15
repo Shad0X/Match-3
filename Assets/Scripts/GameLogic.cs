@@ -8,7 +8,7 @@ public class GameLogic : MonoBehaviour {
     private GameField gameField;
 
     private GameObject[,] tileGameObjects;
-    private GameObject tileParentObject;
+    private GameObject tileParentObject;//ToDo - will be used as Object Pool in the future
 
     [SerializeField]
     private GameObject gameBackground;
@@ -60,6 +60,7 @@ public class GameLogic : MonoBehaviour {
         }
     }
     
+    //ToDo - needs better name and parameter. Assumes that Users know what it does...
     private GameObject GetRandomTileExcept(string excludedTileName) {//not sure if it should use tile names or some other kind of reference...
                                                              //List<GameObject> availableTiles = tileVariations.
                                                              //NOTE - tileName might differ from the Prefab name, due to being a (Clone)... ignore that part ? 
@@ -98,13 +99,13 @@ public class GameLogic : MonoBehaviour {
         return new Vector3(xLocation, yLocation, gameBackground.transform.position.z); //move to parameters to make static
     }
 
-    //ToDo - Generate a field where there are no Matches (3 or more tiles of same type in a horizontal line)
     private GameObject GenerateTileArrayPositionAt(int x, int y) {
         int tileIndex = Random.Range(0, tileVariations.Count);//0 magic nr?
         return Instantiate(tileVariations[tileIndex], tileParentObject.transform);
     }
 
     public void RemoveTiles(int x, int y) {//could use better name.. wont always be multiples, wont always be a single 1.. 
+        //Might as well replace with the Method below ?
         if (tileGameObjects[x, y] != null) {
             RemoveMatchingTilesAroundPosition(x, y);
         }
