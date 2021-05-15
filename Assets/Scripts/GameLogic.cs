@@ -138,7 +138,7 @@ public class GameLogic : MonoBehaviour {
             } else {
                 if (matches >= 2) {
                     //enough matches to be removed, add to list
-                    for (int match = x - 1; match >= x -1 - matches; match--) {
+                    for (int match = x - 1; match >= x - 1 - matches; match--) {
                         tileIndexes.Add(new Vector2Int(match, rowIndex));
                     }
                 }
