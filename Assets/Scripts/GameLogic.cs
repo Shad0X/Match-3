@@ -11,9 +11,6 @@ public class GameLogic : MonoBehaviour {
     private GameObject tileParentObject;//ToDo - will be used as Object Pool in the future
 
     [SerializeField]
-    private GameObject gameBackground;
-
-    [SerializeField]
     [Tooltip("1 of each Tile Type that should be used to populate the tile field")]
     private List<GameObject> tileVariations;
 
@@ -21,15 +18,8 @@ public class GameLogic : MonoBehaviour {
         tileGameObjects = new GameObject[gameField.Width, gameField.Height];
         tileParentObject = new GameObject("Tiles");
 
-        SetGameBackgroundSize(gameField.Width, gameField.Height);
-
         FillFieldWithTiles();
     }
-
-    private void SetGameBackgroundSize(int width, int height) {
-        gameBackground.transform.localScale = new Vector3(width, height, gameBackground.transform.localScale.z);
-    }
-
 
     private void FillFieldWithTiles() { //Logic - can't have more than 2 tiles of the same type in a horizontal line, so there are no accidental mathes
         FillFieldWithRandomTiles();
@@ -49,7 +39,7 @@ public class GameLogic : MonoBehaviour {
                         tileGameObjects[x + 1, y].SetActive(false);//disabling old Tile
                         tileGameObjects[x + 1, y] = null;//clearing out reference to it (not sure if needed... might be overwritten by line below anyway?)
                         tileGameObjects[x + 1, y] = GetRandomTileExcept(tileGameObjects[x, y].name);
-                        tileGameObjects[x + 1, y].transform.position = GetTileGameworldLocation(x + 1, y);
+                        tileGameObjects[x + 1, y].transform.position = gameField.GetTileGameworldLocation(x + 1, y);
 
                         matches = 0;
                     }
@@ -75,28 +65,9 @@ public class GameLogic : MonoBehaviour {
         for (int y = 0; y < gameField.Height; y++) {
             for (int x = 0; x < gameField.Width; x++) {
                 tileGameObjects[x, y] = GenerateTileArrayPositionAt(x, y);
-                tileGameObjects[x, y].transform.position = GetTileGameworldLocation(x, y);
+                tileGameObjects[x, y].transform.position = gameField.GetTileGameworldLocation(x, y);
             }
         }
-    }
-
-    private Vector3 GetTileGameworldLocation(int x, int y) {//ToDo - move to Helper class. Used by Both Fields and Tiles
-        //pass in Field width and height to make it Static ?
-        float xOffset = 0;
-        float yOffset = 0;
-        
-        //using offSet in case if game field size consists of unevent numbers
-        if (gameField.Width % 2 == 0) {
-            xOffset = 0.5f; 
-        }
-        if (gameField.Height % 2 == 0) {
-            yOffset = 0.5f;
-        }
-
-        float xLocation = x - gameField.Width / 2 + xOffset;
-        float yLocation = y - gameField.Height / 2 + yOffset;
-
-        return new Vector3(xLocation, yLocation, gameBackground.transform.position.z); //move to parameters to make static
     }
 
     private GameObject GenerateTileArrayPositionAt(int x, int y) {
