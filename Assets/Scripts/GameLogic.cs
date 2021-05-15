@@ -84,7 +84,86 @@ public class GameLogic : MonoBehaviour {
 
     private void RemoveTileAt(int x, int y) {
         tileGameObjects[x, y].transform.gameObject.SetActive(false);
-        MoveAllTilesAboveThisPositionDown(x, y);
+        tileGameObjects[x, y] = null;
+        //MoveAllTilesAboveThisPositionDown(x, y);
+        //Done moving tiles, check for Matches on entire game field
+    }
+
+    private void HandleHorizontalMatches()
+    {
+        List<Vector2Int> matches = new List<Vector2Int>(); //list of all Tiles that should be removed
+        
+        //iterate over horizontal rows
+        for (int y = 0; y < gameField.Height; y++) { //iterate over all horizontal lines
+            //find all matches
+            matches.AddRange(GetMatchingTilesOnHorizontalRow(y));
+        }
+        // keep track of their count == LIST above
+        // remove ALL MATCHES @ the same time
+        if (matches.Count > 0) {
+            foreach (Vector2Int match in matches) {
+                RemoveTileAt(match.x, match.y); 
+                //ToDo - PROBLEM > This also MOVES TILES DOWN.. meaning that it might change the Grid, before all matching tiles have been removed...
+                // this means that all tiles should be removed WITHOUT any movement on grid
+                // only THEN we can move ALL tiles down IF NEEDED, before performing another check...
+            }
+            MoveAnyTilesDownWithGaps(matches);//Getting rid of any gaps created from tiles being removed..
+            // perform check again, if anything changed
+            HandleHorizontalMatches();
+        }
+    }
+
+    private List<Vector2Int> GetMatchingTilesOnHorizontalRow(int rowIndex) {
+        List<Vector2Int> tileIndexes = new List<Vector2Int>();//could use better name
+        string expectedName;
+        if (tileGameObjects[0, rowIndex] != null) {
+            expectedName = tileGameObjects[0, rowIndex].name; //starting with name of first tile in row, IF it exists... 
+        } else {
+            expectedName = "null";
+        }
+        int matches = 0;
+
+        for (int x = 1; x < gameField.Width ; x++) {
+            if (tileGameObjects[x, rowIndex] != null
+                && tileGameObjects[x, rowIndex].name.Equals(expectedName)) {
+                matches += 1;
+                if (x == gameField.Width - 1) {//on the last tile of row
+                    if (matches >= 2) {
+                        //enough matches to be removed, add to list
+                        for (int match = x; match >= x - 1 - matches; match--) {
+                            tileIndexes.Add(new Vector2Int(match, rowIndex));
+                        }
+                    }
+                }
+            } else {
+                if (matches >= 2) {
+                    //enough matches to be removed, add to list
+                    for (int match = x - 1; match >= x -1 - matches; match--) {
+                        tileIndexes.Add(new Vector2Int(match, rowIndex));
+                    }
+                }
+                matches = 0;
+                if (tileGameObjects[x, rowIndex] != null) {
+                    expectedName = tileGameObjects[x, rowIndex].name;
+                } else {
+                    expectedName = "null"; //ToDo - do something better about this
+                }
+            }
+        }
+
+        return tileIndexes;
+    }
+
+
+    private void MoveAnyTilesDownWithGaps(List<Vector2Int> tiles) { //needs better name
+        List<Vector2Int> allTiles = tiles;
+        for (int y = 0; y < gameField.Height; y++) {
+            foreach (Vector2Int tile in allTiles) {
+                if (tile.y == y) {
+                    MoveAllTilesAboveThisPositionDown(tile.x, tile.y);
+                }
+            }
+        }
     }
 
     private void MoveAllTilesAboveThisPositionDown(int x, int y) {
@@ -111,13 +190,9 @@ public class GameLogic : MonoBehaviour {
     }
 
     private void RemoveMatchingTilesAroundPosition(int x, int y) {
-        string expectedName = tileGameObjects[x, y].name;
         RemoveTileAt(x, y);
-
-        int matchingTileCount = GetHorizontallyMatchingTileCount(x, y, expectedName);
-        if (matchingTileCount >= 2) {
-            RemoveHorizontallyMatchingTiles(x, y, expectedName);
-        }
+        MoveAllTilesAboveThisPositionDown(x, y);
+        HandleHorizontalMatches();//Checks for any Matches on Field to remove them
     }
 
     private int GetHorizontallyMatchingTileCount(int x, int y, string expectedName) {
