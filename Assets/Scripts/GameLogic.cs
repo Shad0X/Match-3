@@ -14,6 +14,19 @@ public class GameLogic : MonoBehaviour {
     [Tooltip("1 of each Tile Type that should be used to populate the tile field")]
     private List<GameObject> tileVariations;
 
+#if UNITY_EDITOR
+    public void SetTestData(GameField gameField, GameObject[,] tileGameObjects)
+    {
+        this.gameField = gameField;
+        this.tileGameObjects = tileGameObjects;
+    }
+
+    public GameObject[,] GetTilesOnField()
+    {
+        return tileGameObjects;
+    }
+#endif
+
     void Start() {
         tileGameObjects = new GameObject[gameField.Width, gameField.Height];
         tileParentObject = new GameObject("Tiles");
@@ -77,6 +90,7 @@ public class GameLogic : MonoBehaviour {
 
     public void RemoveTiles(int x, int y) {//could use better name.. wont always be multiples, wont always be a single 1.. 
         //Might as well replace with the Method below ?
+        
         if (tileGameObjects[x, y] != null) {
             RemoveMatchingTilesAroundPosition(x, y);
         }
@@ -166,7 +180,24 @@ public class GameLogic : MonoBehaviour {
         }
     }
 
-    private void MoveAllTilesAboveThisPositionDown(int x, int y) {
+    private void MoveAllTilesAboveThisPositionDown(int x, int y)
+    {
+        if (y - 1 <= -1) {
+            return;
+        }
+
+        GameObject tileAbove = tileGameObjects[x, y - 1];
+        if (tileAbove == null)
+        {
+            return;
+        }
+
+        MoveTileDownOneField(x, y - 1);
+
+        MoveAllTilesAboveThisPositionDown(x, y - 1);
+    }
+
+    /*private void MoveAllTilesAboveThisPositionDown(int x, int y) {
         if (y + 1 >= gameField.Height) {
             return;
         }
@@ -179,13 +210,13 @@ public class GameLogic : MonoBehaviour {
         MoveTileDownOneField(x, y + 1);
         
         MoveAllTilesAboveThisPositionDown(x, y + 1);
-    }
+    }*/
 
     private void MoveTileDownOneField(int x, int y) {
         GameObject tile = tileGameObjects[x, y];
         tile.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y - 1, tile.transform.position.z);
 
-        tileGameObjects[x, y - 1] = tile;
+        tileGameObjects[x, y + 1] = tile;
         tileGameObjects[x, y] = null;
     }
 

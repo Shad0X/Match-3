@@ -14,6 +14,15 @@ public class GameField : MonoBehaviour
     [SerializeField]
     private GameObject gameBackground;
 
+#if UNITY_EDITOR
+    public void SetTestData(int fieldWidth, int fieldHeight, GameObject tileFieldPrefab, GameObject gameBackground) {
+        this.fieldWidth = fieldWidth;
+        this.fieldHeight = fieldHeight;
+        this.tileFieldPrefab = tileFieldPrefab;
+        this.gameBackground = gameBackground;
+    }
+#endif
+
     public int Width
     {
         get { return fieldWidth; }
@@ -30,8 +39,8 @@ public class GameField : MonoBehaviour
     }
 
     private void SetupGameField() {
-        for (int x = 0; x < fieldWidth; x++) {
-            for (int y = 0; y < fieldHeight; y++) {
+        for (int y = 0; y < fieldHeight; y++) {
+            for (int x = 0; x < fieldWidth; x++) {
                 CreateTileFieldObjectAt(x, y);
             }
         }
@@ -65,6 +74,6 @@ public class GameField : MonoBehaviour
         float xLocation = x - fieldWidth / 2 + xOffset;
         float yLocation = y - fieldHeight / 2 + yOffset;
 
-        return new Vector3(xLocation, yLocation, gameBackground.transform.position.z);//move to parameters to make static?
+        return new Vector3(xLocation, -yLocation, gameBackground.transform.position.z);//move to parameters to make static?
     }
 }
