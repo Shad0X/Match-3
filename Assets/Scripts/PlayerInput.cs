@@ -30,8 +30,8 @@ public class PlayerInput : MonoBehaviour {
 
     private GameLogic gameLogic;
 
-    private void RemoveTile(int x, int y) {
-        gameLogic.RemoveTiles(x, y);
+    private void RemoveTile(int row, int column) {
+        gameLogic.RemoveTiles(row, column);
     }
     
 }

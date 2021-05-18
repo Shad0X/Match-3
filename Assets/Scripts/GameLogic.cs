@@ -88,11 +88,11 @@ public class GameLogic : MonoBehaviour {
         return Instantiate(tileVariations[tileIndex], tileParentObject.transform);
     }
 
-    public void RemoveTiles(int x, int y) {//could use better name.. wont always be multiples, wont always be a single 1.. 
+    public void RemoveTiles(int row, int column) {//could use better name.. wont always be multiples, wont always be a single 1.. 
         //Might as well replace with the Method below ?
         
-        if (tileGameObjects[x, y] != null) {
-            RemoveMatchingTilesAroundPosition(x, y);
+        if (tileGameObjects[row, column] != null) {
+            RemoveMatchingTilesAroundPosition(row, column);
         }
     }
 
@@ -103,14 +103,14 @@ public class GameLogic : MonoBehaviour {
         //Done moving tiles, check for Matches on entire game field
     }
 
-    private void HandleHorizontalMatches()
+    private void HandleMatchesOnRows()
     {
         List<Vector2Int> matches = new List<Vector2Int>(); //list of all Tiles that should be removed
         
         //iterate over horizontal rows
-        for (int y = 0; y < gameField.Height; y++) { //iterate over all horizontal lines
+        for (int row = 0; row < gameField.Height; row++) { //iterate over all horizontal lines
             //find all matches
-            matches.AddRange(GetMatchingTilesOnHorizontalRow(y));
+            matches.AddRange(GetMatchingTilesOnHorizontalRow(row));
         }
         // keep track of their count == LIST above
         // remove ALL MATCHES @ the same time
@@ -123,42 +123,42 @@ public class GameLogic : MonoBehaviour {
             }
             MoveAnyTilesDownWithGaps(matches);//Getting rid of any gaps created from tiles being removed..
             // perform check again, if anything changed
-            HandleHorizontalMatches();
+            HandleMatchesOnRows();
         }
     }
 
     private List<Vector2Int> GetMatchingTilesOnHorizontalRow(int rowIndex) {
         List<Vector2Int> tileIndexes = new List<Vector2Int>();//could use better name
         string expectedName;
-        if (tileGameObjects[0, rowIndex] != null) {
-            expectedName = tileGameObjects[0, rowIndex].name; //starting with name of first tile in row, IF it exists... 
+        if (tileGameObjects[rowIndex, 0] != null) {
+            expectedName = tileGameObjects[rowIndex, 0].name; //starting with name of first tile in row, IF it exists... 
         } else {
             expectedName = "null";
         }
         int matches = 0;
 
-        for (int x = 1; x < gameField.Width ; x++) {
-            if (tileGameObjects[x, rowIndex] != null
-                && tileGameObjects[x, rowIndex].name.Equals(expectedName)) {
+        for (int column = 1; column < gameField.Width ; column++) {
+            if (tileGameObjects[rowIndex, column] != null
+                && tileGameObjects[rowIndex, column].name.Equals(expectedName)) {
                 matches += 1;
-                if (x == gameField.Width - 1) {//on the last tile of row
+                if (column == gameField.Width - 1) {//on the last tile of row
                     if (matches >= 2) {
                         //enough matches to be removed, add to list
-                        for (int match = x; match > x - 1 - matches; match--) {
-                            tileIndexes.Add(new Vector2Int(match, rowIndex));
+                        for (int match = column; match > column - 1 - matches; match--) {
+                            tileIndexes.Add(new Vector2Int(rowIndex, match)); 
                         }
                     }
                 }
             } else {
                 if (matches >= 2) {
                     //enough matches to be removed, add to list
-                    for (int match = x - 1; match >= x - 1 - matches; match--) {
-                        tileIndexes.Add(new Vector2Int(match, rowIndex));
+                    for (int match = column - 1; match >= column - 1 - matches; match--) {
+                        tileIndexes.Add(new Vector2Int(rowIndex, match));
                     }
                 }
                 matches = 0;
-                if (tileGameObjects[x, rowIndex] != null) {
-                    expectedName = tileGameObjects[x, rowIndex].name;
+                if (tileGameObjects[rowIndex, column] != null) {
+                    expectedName = tileGameObjects[rowIndex, column].name;
                 } else {
                     expectedName = "null"; //ToDo - do something better about this
                 }
@@ -180,21 +180,22 @@ public class GameLogic : MonoBehaviour {
         }
     }
 
-    private void MoveAllTilesAboveThisPositionDown(int x, int y)
-    {
-        if (y - 1 <= -1) {
+    private void MoveAllTilesAboveThisPositionDown(int row, int column) {
+        if (row - 1 <= -1){
+            return;
+        }
+        /*if (y - 1 <= -1) {
+            return;
+        }*/
+
+        GameObject tileAbove = tileGameObjects[row - 1, column];
+        if (tileAbove == null) {
             return;
         }
 
-        GameObject tileAbove = tileGameObjects[x, y - 1];
-        if (tileAbove == null)
-        {
-            return;
-        }
+        MoveTileDownOneField(row - 1, column);
 
-        MoveTileDownOneField(x, y - 1);
-
-        MoveAllTilesAboveThisPositionDown(x, y - 1);
+        MoveAllTilesAboveThisPositionDown(row - 1, column);
     }
 
     /*private void MoveAllTilesAboveThisPositionDown(int x, int y) {
@@ -212,18 +213,18 @@ public class GameLogic : MonoBehaviour {
         MoveAllTilesAboveThisPositionDown(x, y + 1);
     }*/
 
-    private void MoveTileDownOneField(int x, int y) {
-        GameObject tile = tileGameObjects[x, y];
+    private void MoveTileDownOneField(int row, int column) {
+        GameObject tile = tileGameObjects[row, column];
         tile.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y - 1, tile.transform.position.z);
 
-        tileGameObjects[x, y + 1] = tile;
-        tileGameObjects[x, y] = null;
+        tileGameObjects[row + 1, column] = tile;
+        tileGameObjects[row, column] = null;
     }
 
-    private void RemoveMatchingTilesAroundPosition(int x, int y) {
-        RemoveTileAt(x, y);
-        MoveAllTilesAboveThisPositionDown(x, y);
-        HandleHorizontalMatches();//Checks for any Matches on Field to remove them
+    private void RemoveMatchingTilesAroundPosition(int row, int column) {
+        RemoveTileAt(row, column);
+        MoveAllTilesAboveThisPositionDown(row, column);
+        HandleMatchesOnRows();//Checks for any Matches on Field to remove them
     }
 
     private int GetHorizontallyMatchingTileCount(int x, int y, string expectedName) {

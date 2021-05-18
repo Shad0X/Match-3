@@ -39,8 +39,8 @@ public class GameField : MonoBehaviour
     }
 
     private void SetupGameField() {
-        for (int y = 0; y < fieldHeight; y++) {
-            for (int x = 0; x < fieldWidth; x++) {
+        for (int x = 0; x < fieldWidth; x++) {
+            for (int y = 0; y < fieldHeight; y++) {
                 CreateTileFieldObjectAt(x, y);
             }
         }
@@ -58,7 +58,7 @@ public class GameField : MonoBehaviour
         tile.SetValue(x, y);
     }
 
-    public Vector3 GetTileGameworldLocation(int x, int y)  {//ToDo - maybe move to Helper class instead ? Used by Both Fields and Tiles
+    public Vector3 GetTileGameworldLocation(int row, int column)  {//ToDo - maybe move to Helper class instead ? Used by Both Fields and Tiles
         //possibly pass in Field width and height to make it Static ?
         float xOffset = 0;
         float yOffset = 0;
@@ -71,9 +71,9 @@ public class GameField : MonoBehaviour
             yOffset = 0.5f;
         }
 
-        float xLocation = x - fieldWidth / 2 + xOffset;
-        float yLocation = y - fieldHeight / 2 + yOffset;
+        float rowLocation = row - fieldHeight / 2 + xOffset;
+        float columnLocation = column - fieldWidth / 2 + yOffset;
 
-        return new Vector3(xLocation, -yLocation, gameBackground.transform.position.z);//move to parameters to make static?
+        return new Vector3(columnLocation, -rowLocation, gameBackground.transform.position.z);//move to parameters to make static?
     }
 }

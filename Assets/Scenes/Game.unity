@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dea851e95fd8a54d8a2e92172502808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fieldWidth: 10
-  fieldHeight: 10
+  fieldWidth: 3
+  fieldHeight: 3
   tileFieldPrefab: {fileID: 3603937792976823472, guid: 717962f7463f7ca4a980021ffe4c8978, type: 3}
   gameBackground: {fileID: 1479276307}
 --- !u!4 &16212514
@@ -168,7 +168,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &43900437
 GameObject:
@@ -215,7 +215,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameField: {fileID: 16212513}
-  gameBackground: {fileID: 1479276307}
   tileVariations:
   - {fileID: 5444109902792811763, guid: 69afb1a99627fbf4286b3730a632f619, type: 3}
   - {fileID: 2633402318913881859, guid: 59dbfa7c2ca8d674dbb822ffc6f4ce3f, type: 3}
@@ -263,7 +262,7 @@ Transform:
   - {fileID: 1479276311}
   - {fileID: 705507995}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
