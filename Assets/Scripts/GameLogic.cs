@@ -43,16 +43,16 @@ public class GameLogic : MonoBehaviour {
         //iterate over all horizontal rows
         //check that current Tile doesn't have more than 1 match next to it
         int matches = 0;
-        for (int y = 0; y < gameField.Height; y++) {
+        for (int row = 0; row < gameField.Height; row++) {
             matches = 0;
-            for (int x = 0; x < gameField.Width - 1; x++) {
-                if (tileGameObjects[x, y].name.Equals(tileGameObjects[x + 1, y].name)) {
+            for (int column = 0; column < gameField.Width - 1; column++) {
+                if (tileGameObjects[row, column].name.Equals(tileGameObjects[row, column + 1].name)) {
                     matches += 1;
                     if (matches == 2) {
-                        tileGameObjects[x + 1, y].SetActive(false);//disabling old Tile
-                        tileGameObjects[x + 1, y] = null;//clearing out reference to it (not sure if needed... might be overwritten by line below anyway?)
-                        tileGameObjects[x + 1, y] = GetRandomTileExcept(tileGameObjects[x, y].name);
-                        tileGameObjects[x + 1, y].transform.position = gameField.GetTileGameworldLocation(x + 1, y);
+                        tileGameObjects[row, column + 1].SetActive(false);//disabling old Tile
+                        tileGameObjects[row, column + 1] = null;//clearing out reference to it (not sure if needed... might be overwritten by line below anyway?)
+                        tileGameObjects[row, column + 1] = GetRandomTileExcept(tileGameObjects[row, column].name);
+                        tileGameObjects[row, column + 1].transform.position = gameField.GetTileGameworldLocation(row, column + 1);
 
                         matches = 0;
                     }

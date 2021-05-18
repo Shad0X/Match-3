@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dea851e95fd8a54d8a2e92172502808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fieldWidth: 3
-  fieldHeight: 3
+  fieldWidth: 10
+  fieldHeight: 10
   tileFieldPrefab: {fileID: 3603937792976823472, guid: 717962f7463f7ca4a980021ffe4c8978, type: 3}
   gameBackground: {fileID: 1479276307}
 --- !u!4 &16212514
