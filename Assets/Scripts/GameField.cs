@@ -15,7 +15,7 @@ public class GameField : MonoBehaviour
     private GameObject gameBackground;
 
 #if UNITY_EDITOR
-    public void SetTestData(int fieldWidth, int fieldHeight, GameObject tileFieldPrefab, GameObject gameBackground) {
+    public void SetTestData(int fieldHeight, int fieldWidth, GameObject tileFieldPrefab, GameObject gameBackground) {
         this.fieldWidth = fieldWidth;
         this.fieldHeight = fieldHeight;
         this.tileFieldPrefab = tileFieldPrefab;
