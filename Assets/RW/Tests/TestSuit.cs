@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
@@ -106,6 +107,26 @@ public class TestSuit {
         //Bottom row
         Assert.AreEqual("E", tilesOnField[2, 0].name);
         Assert.AreEqual("B", tilesOnField[2, 1].name);
+
+        yield return null;
+    }
+
+    [UnityTest]
+
+    public IEnumerator TryingToRemoveNonExistingTileThrowsException()
+    {
+        GameObject gameObject = new GameObject();
+
+        GameField gameField = gameObject.AddComponent<GameField>();
+        gameField.SetTestData(1, 3, new GameObject("Field"), new GameObject("Background"));
+
+        GameLogic gameLogic = gameObject.AddComponent<GameLogic>();
+
+        GameObject[,] tilesOnField = new GameObject[,] {};
+
+        gameLogic.SetTestData(gameField, tilesOnField);
+
+        Assert.That(() => gameLogic.RemoveTiles(0, 0), Throws.TypeOf<IndexOutOfRangeException>());
 
         yield return null;
     }
