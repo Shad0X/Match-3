@@ -112,7 +112,6 @@ public class TestSuit {
     }
 
     [UnityTest]
-
     public IEnumerator TryingToRemoveNonExistingTileThrowsException()
     {
         GameObject gameObject = new GameObject();
